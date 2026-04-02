@@ -68,8 +68,12 @@ newgrp docker
 docker-web/
 │
 ├── Dockerfile
-└── html/
-    └── index.html
+└── web1/    
+    └── html/
+        └── index.html
+└── web2/    
+    └── html/
+        └── index.html
 ```
 อธิบาย
 | ไฟล์         | หน้าที่         |
@@ -83,7 +87,8 @@ docker-web/
 mkdir docker-web
 cd docker-web
 
-mkdir html
+mkdir web1, web2
+mkdir web1/html, web2/html
 touch html/index.html
 touch Dockerfile
 ```
