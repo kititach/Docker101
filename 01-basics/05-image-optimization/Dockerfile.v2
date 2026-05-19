@@ -1,0 +1,12 @@
+# v2: เปลี่ยน base image เป็น slim + cleanup pip cache
+# - python:3.12-slim ตัด Debian packages ที่ไม่จำเป็นออก
+# - --no-cache-dir ป้องกัน pip เก็บ wheel ไว้ใน image
+# - layer ordering ถูกต้อง
+FROM python:3.12-slim
+
+WORKDIR /app
+COPY app/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY app/app.py .
+
+CMD ["python", "app.py"]

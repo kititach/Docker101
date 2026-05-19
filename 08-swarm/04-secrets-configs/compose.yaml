@@ -1,0 +1,27 @@
+services:
+  app:
+    image: alpine:3.20
+    command: ["sh", "-c", "while true; do
+        echo '--- secrets ---';
+        ls /run/secrets/;
+        echo '--- config ---';
+        cat /etc/app/config.conf;
+        sleep 30;
+      done"]
+    secrets:
+      - db_password
+      - api_key
+    configs:
+      - source: app_config
+        target: /etc/app/config.conf
+        mode: 0644
+
+secrets:
+  db_password:
+    external: true       # ต้องสร้างผ่าน docker secret create ก่อน
+  api_key:
+    external: true
+
+configs:
+  app_config:
+    external: true       # หรือใช้ file: ./app.conf เพื่อ create จาก file

@@ -1,0 +1,49 @@
+# ─── Secrets & credentials ──────────────────────────────────────────────
+# ไม่ commit ไฟล์ secret จริง — แต่ละ lab มี *.example ให้ copy ตอน setup
+**/secrets/db_password.txt
+**/secrets/*.txt
+!**/secrets/*.example
+
+# TLS keys (self-signed สำหรับ lab ก็ไม่ควร commit)
+**/certs/*.key
+**/certs/*.pem
+**/certs/*.crt
+!**/certs/*.example
+
+# htpasswd files
+**/auth/htpasswd
+!**/auth/*.example
+
+# Build secret tokens
+**/token.txt
+!**/token.txt.example
+
+# ─── Test artifacts ─────────────────────────────────────────────────────
+**/backups/
+*.log
+
+# ─── OS junk ────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# ─── Editor / IDE ───────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.iml
+
+# ─── Python ─────────────────────────────────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+
+# ─── Node ───────────────────────────────────────────────────────────────
+node_modules/
+npm-debug.log*
+
+# ─── Docker / Compose runtime ──────────────────────────────────────────
+.env
+.env.local

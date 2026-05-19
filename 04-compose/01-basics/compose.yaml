@@ -1,0 +1,29 @@
+services:
+  web:
+    build: ./app
+    ports:
+      - "9080:8080"
+    environment:
+      - REDIS_HOST=redis
+    depends_on:
+      - redis
+    networks:
+      - frontend
+      - backend
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis-data:/data
+    networks:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  redis-data:
+
+networks:
+  frontend:
+  backend:
+    internal: true

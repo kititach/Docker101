@@ -1,0 +1,13 @@
+FROM python:3.12-alpine
+WORKDIR /app
+
+COPY requirements.txt .
+
+# BuildKit cache mount: pip cache อยู่นอก layer — เร็วทุก build แม้ --no-cache
+# cache ไม่ถูกเก็บใน image → ขนาด image ไม่เพิ่ม
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install -r requirements.txt
+
+COPY . .
+
+CMD ["python", "app.py"]

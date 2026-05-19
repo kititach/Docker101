@@ -1,0 +1,72 @@
+services:
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.49.1
+    container_name: lab09-cadvisor
+    ports:
+      - "9092:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /sys:/sys:ro
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    privileged: true
+    devices:
+      - /dev/kmsg
+    command:
+      - --housekeeping_interval=5s
+      - --disable_metrics=disk,diskIO,tcp,udp,advtcp,sched,process,referenced_memory
+      - --docker_only=false
+      - --store_container_labels=false
+
+  node-exporter:
+    image: prom/node-exporter:v1.8.2
+    container_name: lab09-node-exporter
+    ports:
+      - "9100:9100"
+    pid: host
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--path.rootfs=/rootfs'
+
+  prometheus:
+    image: prom/prometheus:v2.55.0
+    container_name: lab09-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prom-data:/prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --web.enable-lifecycle
+
+  grafana:
+    image: grafana/grafana:11.0.0
+    container_name: lab09-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_DISABLE_LOGIN_FORM=true
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./grafana-datasource.yaml:/etc/grafana/provisioning/datasources/prom.yaml:ro
+
+  # demo app ที่จะให้ดู metrics
+  demo-app:
+    image: nginxdemos/hello:plain-text
+    container_name: lab09-demo-app
+    ports:
+      - "9093:80"
+
+volumes:
+  prom-data:
+  grafana-data:

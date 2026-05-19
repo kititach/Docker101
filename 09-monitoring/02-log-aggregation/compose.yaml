@@ -1,0 +1,47 @@
+services:
+  loki:
+    image: grafana/loki:3.0.0
+    container_name: lab09-loki
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - loki-data:/loki
+
+  promtail:
+    image: grafana/promtail:3.0.0
+    container_name: lab09-promtail
+    volumes:
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./promtail-config.yaml:/etc/promtail/config.yaml:ro
+    command: -config.file=/etc/promtail/config.yaml
+    depends_on:
+      - loki
+
+  grafana:
+    image: grafana/grafana:11.0.0
+    container_name: lab09-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_DISABLE_LOGIN_FORM=true
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./grafana-datasource.yaml:/etc/grafana/provisioning/datasources/loki.yaml:ro
+    depends_on:
+      - loki
+
+  # demo app ที่ spam log
+  noisy-app:
+    image: alpine:3.20
+    container_name: lab09-noisy
+    command: ["sh", "-c", "while true; do echo \"$(date) level=info user_id=$$((RANDOM % 100)) event=request status=200\"; sleep 1; done"]
+    depends_on:
+      - promtail
+
+volumes:
+  loki-data:
+  grafana-data:

@@ -1,0 +1,15 @@
+# syntax=docker/dockerfile:1.7
+# ✅ CORRECT: ใช้ --mount=type=secret
+# Secret ถูก mount เป็นไฟล์ tmpfs เฉพาะตอน RUN นี้ทำงาน
+# - ไม่ติดเข้า layer ไหนเลย
+# - `docker history` ไม่เห็นค่าของ token
+# - ไม่อยู่ใน image metadata
+FROM alpine:3.20
+
+RUN apk add --no-cache curl
+
+RUN --mount=type=secret,id=github_token \
+    TOKEN=$(cat /run/secrets/github_token) && \
+    curl -sf -H "Authorization: token $TOKEN" https://api.github.com/zen > /tmp/zen.txt || true
+
+CMD ["cat", "/tmp/zen.txt"]

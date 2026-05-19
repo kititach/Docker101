@@ -1,0 +1,18 @@
+# v3: Alpine base — เล็กที่สุดสำหรับ pure Python app
+# - python:3.12-alpine ใช้ musl libc + busybox
+# - non-root user
+# - HEALTHCHECK
+FROM python:3.12-alpine
+
+WORKDIR /app
+COPY app/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY app/app.py .
+
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+USER appuser
+
+HEALTHCHECK --interval=30s --timeout=3s \
+  CMD wget -qO- http://localhost:8080/health || exit 1
+
+CMD ["python", "app.py"]

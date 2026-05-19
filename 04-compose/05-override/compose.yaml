@@ -1,0 +1,24 @@
+# Base config — ใช้ร่วมกันทุก environment
+services:
+  web:
+    build: ../01-basics/app
+    environment:
+      - REDIS_HOST=redis
+    networks:
+      - frontend
+      - backend
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis-data:/data
+    networks:
+      - backend
+
+volumes:
+  redis-data:
+
+networks:
+  frontend:
+  backend:
+    internal: true

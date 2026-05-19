@@ -1,0 +1,26 @@
+# syntax=docker/dockerfile:1.7
+# ↑ บรรทัดนี้สำคัญ — เปิด BuildKit frontend ที่รองรับ --mount=type=cache
+FROM python:3.12-slim
+
+WORKDIR /app
+
+# apt cache mount:
+# - /var/cache/apt        เก็บไฟล์ .deb
+# - /var/lib/apt/lists    เก็บ package index
+# sharing=locked → ถ้าหลาย build รันพร้อมกัน ใช้ lock กัน race
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
+    rm -f /etc/apt/apt.conf.d/docker-clean && \
+    apt-get update && apt-get install -y --no-install-recommends \
+    curl jq
+
+COPY requirements.txt .
+
+# pip cache mount: เก็บ wheels ที่ดาวน์โหลดแล้วใน /root/.cache/pip
+# ไม่ใส่ --no-cache-dir แล้ว เพราะเราอยากให้ pip "ใช้ cache"
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install -r requirements.txt
+
+COPY app.py .
+
+CMD ["python", "app.py"]

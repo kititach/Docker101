@@ -1,0 +1,45 @@
+# Hardened compose — รวมทุก security technique
+services:
+  web:
+    build: .
+    image: hardened-app:1.0
+    ports:
+      - "9095:8080"
+
+    # 1. Non-root user (Lab 01)
+    user: "10001:10001"
+
+    # 2. Drop ทุก capability — Flask app ไม่ต้องการ (Lab 02)
+    cap_drop:
+      - ALL
+
+    # 3. Read-only rootfs + tmpfs (Lab 03)
+    read_only: true
+    tmpfs:
+      - /tmp:size=10m
+      - /run:size=1m
+
+    # 4. Security options
+    security_opt:
+      - no-new-privileges:true    # ป้องกัน setuid escalation
+      # - seccomp:default.json    # custom seccomp profile (optional)
+      # - apparmor=myapp-profile  # custom AppArmor (optional)
+
+    # 5. Resource limits — ป้องกัน DoS
+    pids_limit: 100               # จำกัด process count
+    mem_limit: 256m
+    cpus: 0.5
+    ulimits:
+      nofile:                     # จำกัด file descriptors
+        soft: 1024
+        hard: 2048
+      nproc: 100
+
+    # 6. Logging limits — ป้องกัน disk fill
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+    restart: unless-stopped

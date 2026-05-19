@@ -1,0 +1,49 @@
+services:
+  web:
+    build: ../01-basics/app
+    ports:
+      - "8080:8080"
+    environment:
+      - REDIS_HOST=redis
+    depends_on:
+      - redis
+    networks:
+      - frontend
+      - backend
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis-data:/data
+    networks:
+      - backend
+
+  # profile: debug — รันเพิ่มด้วย --profile debug
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    profiles: [debug]
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - "8081:8081"
+    depends_on:
+      - redis
+    networks:
+      - backend
+
+  # profile: debug — GUI admin สำหรับดู redis
+  adminer:
+    image: adminer:4
+    profiles: [debug]
+    ports:
+      - "8082:8080"
+    networks:
+      - backend
+
+volumes:
+  redis-data:
+
+networks:
+  frontend:
+  backend:
+    internal: true

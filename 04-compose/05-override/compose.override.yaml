@@ -1,0 +1,14 @@
+# Dev overrides — merge อัตโนมัติกับ compose.yaml เมื่ออยู่ใน directory เดียวกัน
+services:
+  web:
+    ports:
+      - "8080:8080"
+    volumes:
+      - ../01-basics/app:/app   # bind mount — hot-reload
+    environment:
+      - FLASK_ENV=development
+    command: flask run --host=0.0.0.0 --port=8080 --reload
+
+  redis:
+    ports:
+      - "6379:6379"             # expose redis port สำหรับ debug บน host

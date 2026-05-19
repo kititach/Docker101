@@ -1,0 +1,11 @@
+# ❌ ANTI-PATTERN: COPY ไฟล์ secret เข้า image
+# ปัญหา: ถึงจะ `rm` ทิ้งใน layer ถัดไป ไฟล์ก็ยังอยู่ใน layer ก่อนหน้า
+# ใครดู image ด้วย `docker save` แล้วแกะ tar ก็เห็นไฟล์ครบ
+FROM alpine:3.20
+
+COPY token.txt /tmp/token.txt
+RUN apk add --no-cache curl && \
+    curl -sf -H "Authorization: token $(cat /tmp/token.txt)" https://api.github.com/zen > /tmp/zen.txt || true && \
+    rm /tmp/token.txt   # ← ไร้ประโยชน์ — token.txt ยังอยู่ใน layer ก่อนหน้า!
+
+CMD ["cat", "/tmp/zen.txt"]

@@ -1,0 +1,20 @@
+services:
+  web:
+    image: nginxdemos/hello:plain-text
+    ports:
+      - "9083:80"
+    deploy:
+      replicas: 4
+      update_config:
+        parallelism: 2        # update 2 tasks พร้อมกัน
+        delay: 5s             # รอ 5s ระหว่างแต่ละ batch
+        order: start-first    # start ตัวใหม่ก่อนค่อย kill ตัวเก่า (zero-downtime)
+        failure_action: rollback
+        monitor: 10s          # ดู task ใหม่ 10s ก่อนถือว่า healthy
+        max_failure_ratio: 0.3
+      rollback_config:
+        parallelism: 2
+        delay: 5s
+        order: start-first
+      restart_policy:
+        condition: on-failure

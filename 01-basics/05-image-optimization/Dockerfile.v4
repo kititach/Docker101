@@ -1,0 +1,23 @@
+# v4: Multi-stage — แยก build env ออกจาก runtime env
+# ประโยชน์ชัดเมื่อ: package ต้องคอมไพล์, build tools ใหญ่, ต้องการ audit runtime ที่ minimal
+#
+# Stage 1: ติดตั้ง dependencies ใน build environment
+FROM python:3.12 AS builder
+WORKDIR /build
+COPY app/requirements.txt .
+# --prefix ติดตั้งใน path แยก เพื่อ COPY ไปยัง stage ถัดไปได้ง่าย
+RUN pip install --no-cache-dir --prefix=/deps -r requirements.txt
+
+# Stage 2: runtime image เล็กและสะอาด — ไม่มี pip, setuptools, หรือ build cache
+FROM python:3.12-alpine AS runtime
+WORKDIR /app
+COPY --from=builder /deps /usr/local
+COPY app/app.py .
+
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+USER appuser
+
+HEALTHCHECK --interval=30s --timeout=3s \
+  CMD wget -qO- http://localhost:8080/health || exit 1
+
+CMD ["python", "app.py"]

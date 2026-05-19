@@ -1,0 +1,15 @@
+services:
+  registry:
+    image: registry:2
+    container_name: lab07-maint
+    ports:
+      - "5000:5000"
+    volumes:
+      - registry-data:/var/lib/registry
+    environment:
+      # ต้องเปิด — ไม่งั้น DELETE จะ return 405 Method Not Allowed
+      REGISTRY_STORAGE_DELETE_ENABLED: "true"
+    restart: unless-stopped
+
+volumes:
+  registry-data:

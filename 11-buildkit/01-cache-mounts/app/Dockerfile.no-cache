@@ -1,0 +1,18 @@
+# แบบ traditional — ทุก rebuild ที่ทำลาย layer cache จะดาวน์โหลด apt + pip ใหม่หมด
+FROM python:3.12-slim
+
+WORKDIR /app
+
+# apt: ทุกครั้งที่ rebuild จะ download .deb ใหม่
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl jq \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt .
+
+# pip: ทุกครั้งที่ rebuild จะ download wheels ใหม่ (เพราะไม่มี cache)
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY app.py .
+
+CMD ["python", "app.py"]

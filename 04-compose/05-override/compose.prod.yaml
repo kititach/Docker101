@@ -1,0 +1,23 @@
+# Production config — ใช้กับ: docker compose -f compose.yaml -f compose.prod.yaml up
+services:
+  web:
+    ports:
+      - "80:8080"
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 256M
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  redis:
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128M

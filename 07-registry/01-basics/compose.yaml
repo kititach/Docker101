@@ -1,0 +1,15 @@
+services:
+  registry:
+    image: registry:2
+    container_name: lab07-registry
+    ports:
+      - "5000:5000"
+    volumes:
+      - registry-data:/var/lib/registry
+    environment:
+      # อนุญาตให้ลบ image ผ่าน API ได้ (สำหรับ Lab 04)
+      REGISTRY_STORAGE_DELETE_ENABLED: "true"
+    restart: unless-stopped
+
+volumes:
+  registry-data:

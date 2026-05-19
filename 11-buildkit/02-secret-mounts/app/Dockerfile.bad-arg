@@ -1,0 +1,13 @@
+# ❌ ANTI-PATTERN: ส่ง secret ผ่าน ARG
+# ปัญหา: ARG value โผล่ใน `docker history --no-trunc` หรือ image metadata
+# ใครก็ตามที่ pull image มา ดู history ได้ → token หลุดถาวร
+FROM alpine:3.20
+
+ARG GITHUB_TOKEN
+
+RUN apk add --no-cache curl && \
+    echo "Token at build time: $GITHUB_TOKEN" > /tmp/log.txt && \
+    # สมมุติว่าใช้ token ดาวน์โหลด private package (จำลอง)
+    curl -sf -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/zen > /tmp/zen.txt || true
+
+CMD ["cat", "/tmp/zen.txt"]

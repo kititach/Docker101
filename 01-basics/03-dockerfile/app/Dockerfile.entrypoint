@@ -1,0 +1,7 @@
+FROM python:3.12-alpine
+WORKDIR /app
+COPY app.py .
+# ENTRYPOINT กำหนด executable ที่ไม่เปลี่ยน
+# CMD กำหนด default arguments — override ได้ด้วย arguments ตอน docker run
+ENTRYPOINT ["python", "app.py"]
+CMD ["hello", "docker"]

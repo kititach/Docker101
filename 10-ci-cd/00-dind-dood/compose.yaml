@@ -1,0 +1,10 @@
+services:
+  agent:
+    # Pin version เสมอ — ห้ามใช้ docker:cli (เท่ากับ latest) ตามกฎใน CLAUDE.md
+    image: docker:27.3-cli
+    container_name: dood_agent
+    # ปล่อยให้มันรันค้างไว้ด้วยคำสั่ง sleep
+    command: sleep infinity
+    volumes:
+      # นี่คือหัวใจหลักของการทำ DooD! (Mount Docker Socket จากเครื่องแม่เข้าสู่ Container)
+      - /var/run/docker.sock:/var/run/docker.sock

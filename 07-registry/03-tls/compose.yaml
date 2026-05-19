@@ -1,0 +1,18 @@
+services:
+  registry:
+    image: registry:2
+    container_name: lab07-tls-registry
+    ports:
+      - "5443:443"
+    volumes:
+      - registry-data:/var/lib/registry
+      - ./certs:/certs:ro
+    environment:
+      REGISTRY_HTTP_ADDR: "0.0.0.0:443"
+      REGISTRY_HTTP_TLS_CERTIFICATE: "/certs/registry.crt"
+      REGISTRY_HTTP_TLS_KEY: "/certs/registry.key"
+      REGISTRY_STORAGE_DELETE_ENABLED: "true"
+    restart: unless-stopped
+
+volumes:
+  registry-data:
