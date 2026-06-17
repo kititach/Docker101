@@ -2,7 +2,7 @@ services:
   web:
     build: ../01-basics/app
     ports:
-      - "8080:8080"
+      - "18080:8080"
     environment:
       - REDIS_HOST=redis
     depends_on:

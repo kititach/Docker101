@@ -127,7 +127,27 @@
       "Bash(grep -E \"\\(\\\\.key|\\\\.crt|htpasswd|db_password\\\\.txt$|token\\\\.txt$\\)\")",
       "Bash(git check-ignore *)",
       "Bash(git config *)",
-      "Bash(git ls-remote *)"
+      "Bash(git ls-remote *)",
+      "Bash(git commit -q -m ' *)",
+      "Bash(git remote *)",
+      "Bash(git push *)",
+      "Bash(awk '{print $4, $6}')",
+      "Bash(awk 'NR>1 {printf \"%d\\\\n\", \"0x\"$2}')",
+      "Bash(iptables-save)",
+      "Bash(systemctl list-units *)",
+      "Bash(systemctl status *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code} %{redirect_url}\" http://localhost:8080/)",
+      "Bash(curl -sv http://localhost:8080/)",
+      "Bash(snap list *)",
+      "Bash(/usr/local/bin/uosserver version *)",
+      "Bash(/var/lib/uosserver/bin/uosserver-service --version)",
+      "Bash(podman --version)",
+      "Bash(podman ps *)",
+      "Bash(apt list *)",
+      "Bash(minikube status *)",
+      "Read(//home/demo/lab/k8s/**)",
+      "Bash(awk '{print $2}')",
+      "Bash(sudo apt-get *)"
     ]
   }
 }

@@ -2,6 +2,9 @@ FROM python:3.12-alpine
 
 WORKDIR /app
 
+# แก้ไข สำหรับขึ้น fail บน github actions
+RUN apk update && apk upgrade --no-cache
+
 # Non-root user — Principle of Least Privilege (CLAUDE.md ข้อ 7)
 RUN addgroup -S app && adduser -S -G app app
 

@@ -25,3 +25,5 @@ class Handler(http.server.BaseHTTPRequestHandler):
 if __name__ == "__main__":
     print(f"myapp v{VERSION} listening on :{PORT}")
     http.server.HTTPServer(("", PORT), Handler).serve_forever()
+# rebuild
+# rebuild2

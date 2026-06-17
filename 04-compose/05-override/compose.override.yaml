@@ -2,7 +2,7 @@
 services:
   web:
     ports:
-      - "8080:8080"
+      - "18080:8080"
     volumes:
       - ../01-basics/app:/app   # bind mount — hot-reload
     environment:

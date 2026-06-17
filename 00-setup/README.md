@@ -159,6 +159,9 @@ ls -la /var/run/docker.sock
 
 ## Uninstall (ถ้าต้องการถอน)
 
+> **หมายเหตุ:** คำสั่ง uninstall ต้องรันใน terminal จริงเท่านั้น — ไม่สามารถรันผ่าน Claude Code ได้เพราะ `sudo` ต้องการ interactive terminal อ่านรหัสผ่าน
+> ถ้าใช้ Claude Code ให้พิมพ์ `!` นำหน้าคำสั่ง เช่น `! sudo apt-get purge ...`
+
 ```bash
 # ลบ packages
 sudo apt-get purge -y \
@@ -172,6 +175,9 @@ sudo rm -rf /var/lib/docker /var/lib/containerd
 # ลบ repo และ key
 sudo rm /etc/apt/sources.list.d/docker.list
 sudo rm /etc/apt/keyrings/docker.gpg
+
+# ลบ packages ที่ไม่ใช้แล้ว
+sudo apt-get autoremove -y
 ```
 
 ---

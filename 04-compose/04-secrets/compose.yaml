@@ -2,7 +2,7 @@ services:
   web:
     build: ../02-depends-healthcheck/app
     ports:
-      - "8083:8080"
+      - "8093:8090"
     environment:
       - DB_HOST=db
       - DB_NAME=app

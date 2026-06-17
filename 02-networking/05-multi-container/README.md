@@ -134,7 +134,7 @@ docker exec nginx wget -qO- http://redis:6379 --timeout=2 2>&1
 # wget: bad address 'redis'  ← isolated!
 
 # backend เห็น redis ได้ (backend-net เดียวกัน)
-docker exec backend wget -qO- http://localhost:8080/health
+docker exec backend wget -qO- http://127.0.0.1:8080/health
 # OK
 
 # redis ไม่มี port expose ออก host

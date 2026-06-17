@@ -48,8 +48,8 @@ docker run -d --name c2 alpine:3.20 sleep 600
 ดู IP ของแต่ละ container:
 
 ```bash
-docker inspect c1 --format '{{.NetworkSettings.IPAddress}}'
-docker inspect c2 --format '{{.NetworkSettings.IPAddress}}'
+docker inspect c1 --format '{{.NetworkSettings.Networks.bridge.IPAddress}}'
+docker inspect c2 --format '{{.NetworkSettings.Networks.bridge.IPAddress}}'
 # ได้ 172.17.0.2 และ 172.17.0.3 (หรือใกล้เคียง)
 ```
 
@@ -59,7 +59,7 @@ docker inspect c2 --format '{{.NetworkSettings.IPAddress}}'
 
 ```bash
 # เอา IP ของ c2 มาก่อน
-C2_IP=$(docker inspect c2 --format '{{.NetworkSettings.IPAddress}}')
+C2_IP=$(docker inspect c2 --format '{{.NetworkSettings.Networks.bridge.IPAddress}}')
 echo "c2 IP: $C2_IP"
 
 # ping จาก c1 ไป c2 ด้วย IP
